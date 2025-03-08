@@ -5,7 +5,7 @@ import api from './routers';
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('Hello, world!');
 });
 
