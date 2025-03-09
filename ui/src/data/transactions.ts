@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import ky from 'ky';
 
 export interface Transactions {
@@ -32,7 +32,6 @@ export const useAllTransactions = (page: number | undefined) => {
   const query = useQuery({
     queryKey: ['transactions', page],
     queryFn: async () => fetchTransactions(page),
-    placeholderData: keepPreviousData,
   });
 
   return {

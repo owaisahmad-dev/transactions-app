@@ -12,7 +12,6 @@ function App() {
             path="/"
             element={
               <div className="max-w-[800px] mx-auto bg-card shadow border mt-7 rounded-lg p-4">
-                <h1 className="text-2xl font-bold p-4">Transactions</h1>
                 <Transactions />
               </div>
             }

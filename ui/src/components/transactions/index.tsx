@@ -15,6 +15,8 @@ import { TransactionType } from './type';
 import { format } from 'date-fns';
 import { TransactionPagination } from './pagination';
 import { useQueryParams } from '@/hooks/query-params';
+import { Button } from '../ui/button';
+import { RefreshCw } from 'lucide-react';
 
 interface TransactionRowsProps {
   transactions: Transaction[] | undefined;
@@ -81,9 +83,10 @@ export function TransactionFallback() {
 
 export function Transactions() {
   const queryParams = useQueryParams();
-  const { transactions, total, isLoading, isError } = useAllTransactions(
-    queryParams['page'] ? parseInt(queryParams.page) : undefined
-  );
+  const { transactions, total, isLoading, isError, refetch } =
+    useAllTransactions(
+      queryParams['page'] ? parseInt(queryParams.page) : undefined
+    );
 
   const currentPage = useMemo(() => {
     return parseInt(queryParams.page || '1');
@@ -97,7 +100,14 @@ export function Transactions() {
   }, [queryParams, total]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Transactions</h1>
+        <Button onClick={() => refetch()}>
+          <RefreshCw />
+          Refresh
+        </Button>
+      </div>
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
