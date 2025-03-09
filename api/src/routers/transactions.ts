@@ -7,13 +7,13 @@ router.use(json());
 
 router.get('/', async (req, res) => {
   const query = req.query;
-  const per_page = parseInt((query.per_page || '').toString()) || 10;
-  const page = parseInt((query.page || '').toString()) || 1;
+  const per_page = parseInt((query.per_page || '').toString()) - 1 || 9;
+  const page = parseInt((query.page || '').toString()) - 1 || 0;
 
-  const { data, status, error } = await db
+  const { data, status, error, count } = await db
     .from('transactions')
-    .select()
-    .range(page - 1, page - 1 + per_page)
+    .select('*', { count: 'exact' })
+    .range(page, page + per_page)
     .order('timestamp', { ascending: true });
 
   if (error || !data) {
@@ -23,7 +23,10 @@ router.get('/', async (req, res) => {
     return;
   }
 
-  res.status(status).json(data);
+  res.status(status).json({
+    transactions: data,
+    total: count,
+  });
 });
 
 router.get('/:id', async (req, res) => {
@@ -41,8 +44,8 @@ router.get('/:id', async (req, res) => {
     .single();
 
   if (error || !data) {
-    res.status(status).json({
-      message: error.message || 'Unknown Error fetching transaction',
+    res.status(404).json({
+      message: 'Transaction not found',
     });
     return;
   }
